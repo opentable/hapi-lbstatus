@@ -1,104 +1,90 @@
 describe('lbstatus tests', function(){
     var should = require('should'),
-        lbstatus = require('../index'),
-        r = [],
-        plugin = {
-            route: function(routes){
-                r = r.concat(routes);
+        provider = require('../lib/provider'),
+        servers = [{
+            inject: function(options, callback){
+                callback({ statusCode: 200 });
             },
-            servers: [{
-                inject: function(options, callback){
-                    callback({ statusCode: 200 });
-                },
-                log: function(){}
-            }]
-        };
-
-    beforeEach(function(){
-        r = [];
-    });
+            log: function(){}
+        }],
+        badservers = [{
+            inject: function(options, callback){
+                callback({ statusCode: 500 });
+            },
+            log: function(){}
+        }];
 
     it('should register the route', function(){
-        lbstatus.register(plugin, {}, function(){});
+        var p = require('../index.js'),
+            r = [],
+            plugin = {
+              route: function(route) {
+                  r.push(route);
+              }
+            };
+
+        p.register(plugin, {}, function(){});
         r.length.should.eql(1);
+        r[0].path.should.eql('/_lbstatus');
     });
 
     it('should read the file', function(done){
-        lbstatus.register(plugin, {
+        provider.lbstatus(servers, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
-        }, function(){});
-
-        r[0].config.handler({}, function(result){
+        }, function(result){
             result.should.eql('OTWEB_ON');
             done();
-            return { code: function(){} };
         });
     });
 
     it('should return off when the file says off', function(done){
-        lbstatus.register(plugin, {
+        provider.lbstatus(servers, {
             file: __dirname + '/statusfile-off',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
-        }, function(){});
-
-        r[0].config.handler({}, function(result){
+        }, function(result){
             result.should.eql('OTWEB_OFF');
             done();
-            return { code: function(){} };
         });
     });
 
     it('should return off when the file is missing', function(done){
-        lbstatus.register(plugin, {
+        provider.lbstatus(servers, {
             file: __dirname + '/statusfile-missing',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
-        }, function(){});
-
-        r[0].config.handler({}, function(result){
+        }, function(result){
             result.should.eql('OTWEB_OFF');
             done();
-            return { code: function(){} };
-        });
-    });
-
-    it('should return off when the liveness check fails', function(done){
-        lbstatus.register(plugin, {
-            file: __dirname + '/statusfile-on',
-            liveness: '/my/app/123',
-            on: 'OTWEB_ON',
-            off: 'OTWEB_OFF'
-        }, function(){});
-
-        plugin.servers[0].inject = function(options, callback){
-            callback({ code: 500 });
-        };
-
-        r[0].config.handler({}, function(result){
-            result.should.eql('OTWEB_OFF');
-            done();
-            return { code: function(){} };
         });
     });
 
     it('should use the config value for returning the string', function(done){
-        lbstatus.register(plugin, {
+        provider.lbstatus(servers, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123',
             on: 'blarg',
             off: 'flarg'
-        }, function(){});
-
-        r[0].config.handler({}, function(result){
-            result.should.eql('flarg');
+        }, function(result){
+            result.should.eql('blarg');
             done();
-            return { code: function(){} };
+        });
+    });
+
+    it('should return off when the liveness check fails', function(done){
+        provider.lbstatus(badservers, {
+            file: __dirname + '/statusfile-on',
+            liveness: '/my/app/123',
+            on: 'OTWEB_ON',
+            off: 'OTWEB_OFF'
+        }, function(result){
+            result.should.eql('OTWEB_OFF');
+            done();
         });
     });
 });
