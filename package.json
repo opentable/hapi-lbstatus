@@ -1,7 +1,7 @@
 {
   "name": "hapi-lbstatus",
-  "version": "1.0.0",
-  "description": "lbstatus endpoint for hapi",
+  "version": "2.0.0",
+  "description": "lbstatus plugin for hapi",
   "main": "index.js",
   "scripts": {
     "test": "grunt test"
@@ -11,7 +11,8 @@
     "url": "git@github.com:opentable/hapi-lbstatus.git"
   },
   "keywords": [
-    "hapi"
+    "hapi",
+    "hapiplugin"
   ],
   "author": "Andy Royle <ajroyle@gmail.com>",
   "license": "MIT",

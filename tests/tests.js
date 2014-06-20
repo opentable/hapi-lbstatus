@@ -2,7 +2,7 @@ describe('lbstatus tests', function(){
     var should = require('should'),
         lbstatus = require('../index'),
         r = [],
-        server = {
+        plugin = {
             route: function(routes){
                 r = r.concat(routes);
             },
@@ -17,15 +17,15 @@ describe('lbstatus tests', function(){
     });
 
     it('should register the route', function(){
-        lbstatus.configure(server, {});
+        lbstatus.register(plugin, {}, function(){});
         r.length.should.eql(1);
     });
 
     it('should read the file', function(done){
-        lbstatus.configure(server, {
+        lbstatus.register(plugin, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123'
-        });
+        }, function(){});
 
         r[0].config.handler({}, function(result){
             result.should.eql('OTWEB_ON');
@@ -35,10 +35,10 @@ describe('lbstatus tests', function(){
     });
 
     it('should return off when the file says off', function(done){
-        lbstatus.configure(server, {
+        lbstatus.register(plugin, {
             file: __dirname + '/statusfile-off',
             liveness: '/my/app/123'
-        });
+        }, function(){});
 
         r[0].config.handler({}, function(result){
             result.should.eql('OTWEB_OFF');
@@ -48,10 +48,10 @@ describe('lbstatus tests', function(){
     });
 
     it('should return off when the file is missing', function(done){
-        lbstatus.configure(server, {
+        lbstatus.register(plugin, {
             file: __dirname + '/statusfile-missing',
             liveness: '/my/app/123'
-        });
+        }, function(){});
 
         r[0].config.handler({}, function(result){
             result.should.eql('OTWEB_OFF');
@@ -61,12 +61,12 @@ describe('lbstatus tests', function(){
     });
 
     it('should return off when the liveness check fails', function(done){
-        lbstatus.configure(server, {
+        lbstatus.register(plugin, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123'
-        });
+        }, function(){});
 
-        server.inject = function(options, callback){
+        plugin.inject = function(options, callback){
             callback({ code: 500 });
         };
 
