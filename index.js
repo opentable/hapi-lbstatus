@@ -8,7 +8,7 @@ exports.register = function(plugin, options, next){
             config: {
                 handler: function(request, reply) {
                     service.lbstatus(plugin.servers, options, function(result){
-                        reply(result).code(200);
+                        reply(result.body).code(result.code);
                     });
                 }
             }

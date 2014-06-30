@@ -37,6 +37,10 @@ server.pack.require("hapi-lbstatus",
 );
 ```
 
+Response Codes:
+- ON:  200
+- OFF: 503
+
 Notes:
 
 - Supports pack servers as well as single instances

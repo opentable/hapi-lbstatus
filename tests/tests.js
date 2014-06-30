@@ -35,7 +35,8 @@ describe('lbstatus tests', function(){
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
         }, function(result){
-            result.should.eql('OTWEB_ON');
+            result.body.should.eql('OTWEB_ON');
+            result.code.should.eql(200);
             done();
         });
     });
@@ -47,7 +48,8 @@ describe('lbstatus tests', function(){
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
         }, function(result){
-            result.should.eql('OTWEB_OFF');
+            result.body.should.eql('OTWEB_OFF');
+            result.code.should.eql(503);
             done();
         });
     });
@@ -59,7 +61,8 @@ describe('lbstatus tests', function(){
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
         }, function(result){
-            result.should.eql('OTWEB_OFF');
+            result.body.should.eql('OTWEB_OFF');
+            result.code.should.eql(503);
             done();
         });
     });
@@ -71,7 +74,8 @@ describe('lbstatus tests', function(){
             on: 'blarg',
             off: 'flarg'
         }, function(result){
-            result.should.eql('blarg');
+            result.body.should.eql('blarg');
+            result.code.should.eql(200);
             done();
         });
     });
@@ -83,7 +87,8 @@ describe('lbstatus tests', function(){
             on: 'OTWEB_ON',
             off: 'OTWEB_OFF'
         }, function(result){
-            result.should.eql('OTWEB_OFF');
+            result.body.should.eql('OTWEB_OFF');
+            result.code.should.eql(503);
             done();
         });
     });
