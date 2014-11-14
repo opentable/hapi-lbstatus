@@ -20,12 +20,28 @@ describe('lbstatus tests', function(){
             plugin = {
               route: function(route) {
                   r.push(route);
-              }
+              },
+              expose: function(name, fn){}
             };
 
         p.register(plugin, {}, function(){});
         r.length.should.eql(1);
         r[0].path.should.eql('/_lbstatus');
+    });
+
+    it('should expose the lbstatus method', function(){
+        var p = require('../index.js'),
+            r = [],
+            plugin = {
+              route: function(route) {
+                  r.push(route);
+              },
+              expose: function(name, fn){
+                name.should.eql('lbstatus')
+              }
+            };
+
+        p.register(plugin, {}, function(){});
     });
 
     it('should read the file', function(done){

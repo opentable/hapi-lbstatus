@@ -35,6 +35,12 @@ server.pack.require("hapi-lbstatus",
     }
   }
 );
+
+// also exposes the lbstatus function
+
+server.plugins['hapi-lbstatus'].lbstatus(function(on){
+  // returns true if ON, false if OFF
+});
 ```
 
 Response Codes:

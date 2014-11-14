@@ -15,6 +15,12 @@ exports.register = function(plugin, options, next){
         }
     );
 
+    plugin.expose('lbstatus', function(cb){
+      service.lbstatus(plugin.servers, options, function(result){
+          cb(result.code === 200);
+      });
+    });
+
     next();
 };
 
