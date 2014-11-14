@@ -1,6 +1,6 @@
 {
   "name": "hapi-lbstatus",
-  "version": "2.1.11111111111",
+  "version": "2.1.2",
   "description": "lbstatus plugin for hapi",
   "main": "index.js",
   "scripts": {
