@@ -1,18 +1,18 @@
 describe('lbstatus tests', function(){
     var should = require('should'),
         provider = require('../lib/provider'),
-        servers = [{
+        server = {
             inject: function(options, callback){
                 callback({ statusCode: 200 });
             },
             log: function(){}
-        }],
-        badservers = [{
+        },
+        badserver = {
             inject: function(options, callback){
                 callback({ statusCode: 500 });
             },
             log: function(){}
-        }];
+        };
 
     it('should register the route', function(){
         var p = require('../index.js'),
@@ -45,7 +45,7 @@ describe('lbstatus tests', function(){
     });
 
     it('should read the file', function(done){
-        provider.lbstatus(servers, {
+        provider.lbstatus(server, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',
@@ -58,7 +58,7 @@ describe('lbstatus tests', function(){
     });
 
     it('should return off when the file says off', function(done){
-        provider.lbstatus(servers, {
+        provider.lbstatus(server, {
             file: __dirname + '/statusfile-off',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',
@@ -71,7 +71,7 @@ describe('lbstatus tests', function(){
     });
 
     it('should return off when the file is missing', function(done){
-        provider.lbstatus(servers, {
+        provider.lbstatus(server, {
             file: __dirname + '/statusfile-missing',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',
@@ -84,7 +84,7 @@ describe('lbstatus tests', function(){
     });
 
     it('should use the config value for returning the string', function(done){
-        provider.lbstatus(servers, {
+        provider.lbstatus(server, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123',
             on: 'blarg',
@@ -97,7 +97,7 @@ describe('lbstatus tests', function(){
     });
 
     it('should return off when the liveness check fails', function(done){
-        provider.lbstatus(badservers, {
+        provider.lbstatus(badserver, {
             file: __dirname + '/statusfile-on',
             liveness: '/my/app/123',
             on: 'OTWEB_ON',

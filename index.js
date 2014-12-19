@@ -1,13 +1,13 @@
 var service = require('./lib/provider');
 
-exports.register = function(plugin, options, next){
-    plugin.route(
+exports.register = function(server, options, next){
+    server.route(
         {
             method: "GET",
             path: "/_lbstatus",
             config: {
                 handler: function(request, reply) {
-                    service.lbstatus(plugin.servers, options, function(result){
+                    service.lbstatus(request.server, options, function(result){
                         reply(result.body).code(result.code);
                     });
                 }
@@ -15,8 +15,8 @@ exports.register = function(plugin, options, next){
         }
     );
 
-    plugin.expose('lbstatus', function(cb){
-      service.lbstatus(plugin.servers, options, function(result){
+    server.expose('lbstatus', function(cb){
+      service.lbstatus(server, options, function(result){
           cb(result.code === 200);
       });
     });
