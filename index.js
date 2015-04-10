@@ -10,7 +10,9 @@ exports.register = function(server, options, next){
                     service.lbstatus(request.server, options, function(result){
                         reply(result.body).code(result.code);
                     });
-                }
+                },
+                tags: ['lbstatus', 'non-cacheable'],
+                description: 'get the lbstatus (ON or OFF)'
             }
         }
     );
