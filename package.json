@@ -1,6 +1,6 @@
 {
   "name": "hapi-lbstatus",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "lbstatus plugin for hapi",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,6 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "hapi": "^8.0.0"
+    "hapi": ">=8.0.0"
   }
 }
